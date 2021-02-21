@@ -5,7 +5,15 @@ void ofApp::setup(){
     sound.loadSound("beat.wav"); //Loads a sound file (in bin/data/)
     sound.setLoop(true); // Makes the song loop indefinitely
     sound.setVolume(1); // Sets the song volume
-    ofSetBackgroundColor(ofRandom(255), ofRandom(255), ofRandom(255)); // Sets the Background Color
+    if(mode == '1'){ // Sets the Background Color
+        ofSetBackgroundColor(4, 148, 68); // Green colored background 
+    }else if(mode == '2'){
+        ofSetBackgroundColor(251, 4, 4); // Red colored background
+    }else if(mode == '3'){
+        ofSetBackgroundColor(255, 245, 56); // Yellow colored background
+    }else if(mode == '4'){
+        ofSetBackgroundColor(ofRandom(255), ofRandom(255), ofRandom(255)); // Random colored background
+    }
 }
 
 //--------------------------------------------------------------
@@ -38,8 +46,9 @@ void ofApp::drawMode1(vector<float> amplitudes){
         ofFill(); // Drawn Shapes will be filled in with color
         ofSetColor(256); // This resets the color of the "brush" to white
         ofDrawBitmapString("Rectangle Height Visualizer", 0, 15);
-        ofSetColor(189, 45, 135); 
+        ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
         ofDrawRectangle(2, ofGetHeight() - 100, 50,  amplitudes[0]);
+        
 }
 void ofApp::drawMode2(vector<float> amplitudes){
         ofSetLineWidth(5); // Sets the line width
