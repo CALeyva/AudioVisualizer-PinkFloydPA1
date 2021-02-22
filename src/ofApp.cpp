@@ -52,12 +52,10 @@ void ofApp::drawMode1(vector<float> amplitudes){
         ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
         
         //codigo para que las barras se vean a traves de la pantalla completa
-        int i = 0;
-        while ( i < ofGetWidth() ) { 
-            ofDrawRectangle(i, ofGetHeight() - 100, 50,  amplitudes[0]);
-            i = i + (ofGetWidth()/64) ;
+        for (int i = 0; i < ofGetWidth(); i+=ofGetWidth()/64) {
+            ofDrawRectangle(i, ofGetHeight() - 100, ofGetWidth()/64,  amplitudes[0]);
         }
-}
+    }
 
 void ofApp::drawMode2(vector<float> amplitudes){
         ofSetLineWidth(5); // Sets the line width
