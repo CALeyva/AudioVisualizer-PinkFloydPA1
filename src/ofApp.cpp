@@ -52,7 +52,7 @@ void ofApp::drawMode1(vector<float> amplitudes){
         ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
         
         //codigo para que las barras se vean a traves de la pantalla completa
-        for (int i = 0; i < ofGetWidth(); i+=ofGetWidth()/64) {
+        for (int i = 0; i < ofGetWidth(); i+=(ofGetWidth()/64)) {
             ofDrawRectangle(i, ofGetHeight() - 100, ofGetWidth()/64,  amplitudes[0]);
         }
     }
@@ -70,9 +70,15 @@ void ofApp::drawMode2(vector<float> amplitudes){
 }
 
 void ofApp::drawMode3(vector<float> amplitudes){
+    ofFill(); // Drawn Shapes will be filled in with color
     ofSetColor(256); // This resets the color of the "brush" to white
     ofDrawBitmapString("Rectangle Width Visualizer", 0, 15);
-    // YOUR CODE HERE
+    ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
+
+    ofRotate(90);
+    for (int i = 0; i < ofGetWidth(); i+=(ofGetWidth()/64)) {
+        ofDrawRectangle(i, 0, ofGetWidth()/64,  amplitudes[0]);
+    }
 }
 
 void ofApp::drawMode4(vector<float> amplitudes){
