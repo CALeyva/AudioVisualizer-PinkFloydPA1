@@ -131,6 +131,26 @@ void ofApp::keyPressed(int key){
             sound.load("pigeon-coo.wav"); //esta cancion no suena
             sound.play();
             break;
+        case '=': //sube volumen
+            if(sound.getVolume() >= 1.00){
+                sound.setVolume(1.00);
+            }
+            else if(sound.getVolume() >= 0.00 && sound.getVolume() < 1.00){
+                sound.setVolume(sound.getVolume() + 0.20);
+            } else {
+                sound.setVolume(0.00);
+            }
+            break;
+        case '-': //baja volumen
+            if(sound.getVolume() <= 0.00){
+                sound.setVolume(0.00);
+            }
+            else if(sound.getVolume() > 0.00 && sound.getVolume() <= 1.00){
+                sound.setVolume(sound.getVolume() - 0.20);
+            } else {
+                sound.setVolume(1.00);
+            }
+            break;
     }
 }
 
