@@ -50,7 +50,13 @@ void ofApp::drawMode1(vector<float> amplitudes){
         ofSetColor(256); // This resets the color of the "brush" to white
         ofDrawBitmapString("Rectangle Height Visualizer", 0, 15);
         ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
-        ofDrawRectangle(2, ofGetHeight() - 100, 50,  amplitudes[0]);
+        
+        //codigo para que las barras se vean a traves de la pantalla completa
+        int i = 0;
+        while ( i < ofGetWidth() ) { 
+            ofDrawRectangle(i, ofGetHeight() - 100, 50,  amplitudes[0]);
+            i = i + (ofGetWidth()/64) ;
+        }
 }
 
 void ofApp::drawMode2(vector<float> amplitudes){
