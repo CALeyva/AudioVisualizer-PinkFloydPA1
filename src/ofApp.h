@@ -29,5 +29,6 @@ class ofApp : public ofBaseApp{
 		AudioVisualizer visualizer;
 		
 		bool playing = false;
+		bool pauseDraw = false;
 		char mode = '1';
 };

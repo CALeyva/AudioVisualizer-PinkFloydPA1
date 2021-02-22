@@ -20,8 +20,10 @@ void ofApp::setup(){
 void ofApp::update(){
     /* The update method is called muliple times per second
     It's in charge of updating variables and the logic of our app */
-    ofSoundUpdate(); // Updates all sound players
-    visualizer.updateAmplitudes(); // Updates Amplitudes for visualizer
+    if (!pauseDraw) {
+        ofSoundUpdate(); // Updates all sound players
+        visualizer.updateAmplitudes(); // Updates Amplitudes for visualizer
+    }
 }
 
 //--------------------------------------------------------------
@@ -42,14 +44,15 @@ void ofApp::draw(){
         drawMode4(amplitudes);
     }
 }
+
 void ofApp::drawMode1(vector<float> amplitudes){
         ofFill(); // Drawn Shapes will be filled in with color
         ofSetColor(256); // This resets the color of the "brush" to white
         ofDrawBitmapString("Rectangle Height Visualizer", 0, 15);
         ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
         ofDrawRectangle(2, ofGetHeight() - 100, 50,  amplitudes[0]);
-        
 }
+
 void ofApp::drawMode2(vector<float> amplitudes){
         ofSetLineWidth(5); // Sets the line width
         ofNoFill(); // Only the outline of shapes will be drawn
@@ -67,6 +70,7 @@ void ofApp::drawMode3(vector<float> amplitudes){
     ofDrawBitmapString("Rectangle Width Visualizer", 0, 15);
     // YOUR CODE HERE
 }
+
 void ofApp::drawMode4(vector<float> amplitudes){
     ofSetColor(256); // This resets the color of the "brush" to white
     ofDrawBitmapString("Custom Visualizer", 0, 15);
@@ -78,12 +82,22 @@ void ofApp::keyPressed(int key){
     // This method is called automatically when any key is pressed
     switch(key){
         case 'p':
-            if(playing){
+            if(playing && !pauseDraw) {
                 sound.stop();
-            }else{
+                playing = !playing;
+            }else if (!pauseDraw) {
                 sound.play();
+                playing = !playing;
             }
-            playing = !playing;
+            break;
+        case 'a':
+            if(pauseDraw && playing){
+                sound.play();
+                pauseDraw = !pauseDraw;
+            }else if  (!pauseDraw && playing) {
+                sound.stop();
+                pauseDraw = !pauseDraw;
+            }
             break;
         case '1':
             mode = '1';
