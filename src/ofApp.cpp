@@ -115,6 +115,22 @@ void ofApp::keyPressed(int key){
             mode = '4';
             ofSetBackgroundColor(ofRandom(255), ofRandom(255), ofRandom(255)); // Random colored background
             break;
+        case 'z':
+            sound.load("rock-song.wav"); //cambiar cancion a personal
+            sound.play();
+            break;
+        case 'x':
+            sound.load("beat.wav"); //cambiar cancion a personal
+            sound.play();
+            break;
+        case 'c':
+            sound.load("geesebeat.wav"); //cambiar cancion a personal
+            sound.play();
+            break;
+        case 'v':
+            sound.load("pigeon-coo.wav"); //esta cancion no suena
+            sound.play();
+            break;
     }
 }
 
