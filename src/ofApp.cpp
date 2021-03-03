@@ -1,4 +1,5 @@
 #include "ofApp.h"
+#include <string>
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -20,7 +21,42 @@ void ofApp::setup(){
 void ofApp::update(){
     /* The update method is called muliple times per second
     It's in charge of updating variables and the logic of our app */
-    if (!pauseDraw) {
+    if (recording || playback) {
+        counter++; // Counting frames passed
+    }
+    if (playback) {
+        keyInFrame = true;
+        if (counter <= framesRecorded) {
+            try { // Reduces lookup from O(N) to O(1)
+                playKey = recordings[counter];
+                // keyRecorded = playKey; // Fix !showing auto key presses in draw() when playback
+            } catch (int e) {
+                keyInFrame = false; // There is no recorded key in this frame
+            }
+            if (keyInFrame) { // If key was recorded in this frame count, press the key
+                switch(playKey){
+                    case '1': case '2': case '3': case '4': case 'p': case 'a':
+                        setMode(playKey);
+                        break;
+                    case 'z': case 'x': case 'c': case 'v':
+                        setMusic(playKey);
+                        break;
+                    case '=': case '-':
+                        setVolume(playKey);
+                        break;
+                    case 'r': case 't':
+                        recordPlayback(playKey);
+                        break;
+                }
+            }
+
+        } else if (counter >= framesRecorded) { // If in final frame, reset
+            playback = false;
+            counter = 0;
+        }
+    }
+
+    if (!pauseDraw) { // If not in pause visuals mode
         ofSoundUpdate(); // Updates all sound players
         visualizer.updateAmplitudes(); // Updates Amplitudes for visualizer
     }
@@ -30,9 +66,24 @@ void ofApp::update(){
 void ofApp::draw(){
     /* The update method is called muliple times per second
     It's in charge of drawing all figures and text on screen */
-    if(!playing){
-        ofDrawBitmapString("Press 'p' to play some music!", ofGetWidth()/2 - 50, ofGetHeight()/2);
+
+    if (recording) {
+        ofDrawBitmapString("Frames recorded: " + to_string(counter) + "  Key pressed: " + keyRecorded, ofGetWidth() - 300, 15);
+    } else if (playback) {
+        ofDrawBitmapString("AUTO-PILOT MODE - Frames played: " + to_string(counter), ofGetWidth() - 350, 15);
     }
+
+    if(!playing){
+        ofSetColor(256);
+        ofDrawBitmapString("Press 'p' to enter or exit starting menu", ofGetWidth()/2 - 125, (ofGetHeight()/2) - 75);
+        ofDrawBitmapString("Press 'a' to pause song and visuals", ofGetWidth()/2 - 125, (ofGetHeight()/2) - 50);
+        ofDrawBitmapString("Press 'z', 'x', 'c' or 'v' to change songs", ofGetWidth()/2 - 125, (ofGetHeight()/2) - 25);
+        ofDrawBitmapString("Press '1', '2', '3' or '4' to change visual modes", ofGetWidth()/2 - 125, ofGetHeight()/2);
+        ofDrawBitmapString("Press '=' or '-' to raise or lower volume", ofGetWidth()/2 - 125, (ofGetHeight()/2) + 25);
+        ofDrawBitmapString("Press 'r' to start/stop recording with the beat!", ofGetWidth()/2 - 125, (ofGetHeight()/2) + 50);
+        ofDrawBitmapString("Press 't' after recording for AUTO-PILOT MODE!", ofGetWidth()/2 - 125, (ofGetHeight()/2) + 75);
+    }
+
     vector<float> amplitudes = visualizer.getAmplitudes();
     if(mode == '1'){
         drawMode1(amplitudes);
@@ -51,7 +102,7 @@ void ofApp::drawMode1(vector<float> amplitudes){
         ofDrawBitmapString("Rectangle Height Visualizer", 0, 15);
         ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
         
-        //codigo para que las barras se vean a traves de la pantalla completa
+        // Sets bar widths across the entire window
         for (int i = 0.00; i < ofGetWidth(); i+=(ofGetWidth()/64.00)) {
             ofDrawRectangle(i, ofGetHeight() - 100.00, ofGetWidth()/64.00,  amplitudes[i/(ofGetWidth()/64.00)]);
         }
@@ -87,28 +138,8 @@ void ofApp::drawMode4(vector<float> amplitudes){
     // YOUR CODE HERE
 }
 
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key){
-    // This method is called automatically when any key is pressed
-    switch(key){
-        case 'p':
-            if(playing && !pauseDraw) {
-                sound.stop();
-                playing = !playing;
-            }else if (!pauseDraw) {
-                sound.play();
-                playing = !playing;
-            }
-            break;
-        case 'a':
-            if(pauseDraw && playing){
-                sound.play();
-                pauseDraw = !pauseDraw;
-            }else if  (!pauseDraw && playing) {
-                sound.stop();
-                pauseDraw = !pauseDraw;
-            }
-            break;
+void ofApp::setMode(int key) {
+    switch(key) {
         case '1':
             mode = '1';
             ofSetBackgroundColor(4, 148, 68); // Green colored background 
@@ -125,6 +156,31 @@ void ofApp::keyPressed(int key){
             mode = '4';
             ofSetBackgroundColor(ofRandom(255), ofRandom(255), ofRandom(255)); // Random colored background
             break;
+        case 'p': // Go to main screen
+            if(playing) {
+                sound.stop();
+                playing = !playing;
+            }else if (pauseDraw){
+                playing = !playing;
+            }else {
+                sound.play();
+                playing = !playing;
+            }
+            break;
+        case 'a': // Pause visuals
+            if(pauseDraw && playing){
+                sound.play();
+                pauseDraw = !pauseDraw;
+            }else if  (!pauseDraw && playing) {
+                sound.stop();
+                pauseDraw = !pauseDraw;
+            }
+            break;
+    }
+}
+
+void ofApp::setMusic(int key) {
+    switch(key) {
         case 'z':
             sound.load("rock-song.wav"); //cambiar cancion a personal
             sound.play();
@@ -138,10 +194,15 @@ void ofApp::keyPressed(int key){
             sound.play();
             break;
         case 'v':
-            sound.load("pigeon-coo.wav"); //esta cancion no suena
+            sound.load("pigeon-coo.wav"); //cambiar cancion a personal
             sound.play();
             break;
-        case '=': //sube volumen
+    }
+}
+
+void ofApp::setVolume(int key) {
+    switch(key) {
+        case '=': // Increase volume
             if(sound.getVolume() >= 1.00){
                 sound.setVolume(1.00);
             }
@@ -151,7 +212,7 @@ void ofApp::keyPressed(int key){
                 sound.setVolume(0.00);
             }
             break;
-        case '-': //baja volumen
+        case '-': // Decrease volume
             if(sound.getVolume() <= 0.00){
                 sound.setVolume(0.00);
             }
@@ -162,6 +223,55 @@ void ofApp::keyPressed(int key){
             }
             break;
     }
+}
+
+void ofApp::recordPlayback(int key) {
+    switch(key) {
+        case 'r': // Begins or stops recording keys pressed
+            if (!recording) {
+                recordings.clear();
+                counter = 0; 
+                recording = true;
+            } else {
+                recording = false;
+                framesRecorded = counter;
+                counter = 0;
+            }
+            break;
+        case 't': // Begins or stops playback
+            if (!recording && !playback) {
+                playback = true;
+            } else if (!recording && playback) {
+                playback = false;
+                counter = 0;
+            }
+            break;
+    }
+}
+
+//--------------------------------------------------------------
+void ofApp::keyPressed(int key){
+    // This method is called automatically when any key is pressed
+    switch((playback && key != 't') ? 0 : key){ // Disables keyPressed if in AUTO-PILOT MODE, unless escaping
+        case '1': case '2': case '3': case '4': case 'p': case 'a':
+            setMode(key);
+            break;
+        case 'z': case 'x': case 'c': case 'v':
+            setMusic(key);
+            break;
+        case '=': case '-':
+            setVolume(key);
+            break;
+        case 'r': case 't':
+            recordPlayback(key);
+            break;
+    }
+    // Saves keys pressed if in record mode
+    if (recording && key != 'r' && !playback) {
+        recordings[counter] = key;
+        keyRecorded = key;
+    }
+
 }
 
 //--------------------------------------------------------------

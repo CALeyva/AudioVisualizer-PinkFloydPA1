@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "AudioVisualizer.h"
+#include <map>
 
 class ofApp : public ofBaseApp{
 	public:
@@ -13,6 +14,13 @@ class ofApp : public ofBaseApp{
 		void drawMode2(vector<float> amplitudes);
 		void drawMode3(vector<float> amplitudes);
 		void drawMode4(vector<float> amplitudes);
+
+		void setMode(int key);
+		void setMusic(int key);
+		void setVolume(int key);
+		void setPauseMode(int key);
+		void recordPlayback(int key);
+
 		void keyPressed(int key);
 		void keyReleased(int key);
 		void mouseMoved(int x, int y);
@@ -30,5 +38,15 @@ class ofApp : public ofBaseApp{
 		
 		bool playing = false;
 		bool pauseDraw = false;
+
+		long counter = 0;
+		bool recording = false;
+		bool playback = false;
+		long framesRecorded;
+		char keyRecorded;
+		int playKey;
+		bool keyInFrame;
+		std::map<long, int> recordings;
+		
 		char mode = '1';
 };
