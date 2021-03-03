@@ -70,7 +70,7 @@ void ofApp::draw(){
     if (recording) {
         ofDrawBitmapString("Frames recorded: " + to_string(counter) + "  Key pressed: " + keyRecorded, ofGetWidth() - 300, 15);
     } else if (playback) {
-        ofDrawBitmapString("AUTO-PILOT MODE - Frames played: " + to_string(counter), ofGetWidth() - 350, 15);
+        ofDrawBitmapString("AUTO-PILOT MODE - Frames played: " + to_string(counter), ofGetWidth() - 300, 15);
     }
 
     if(!playing){
