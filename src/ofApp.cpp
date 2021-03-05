@@ -199,8 +199,44 @@ void ofApp::drawMode5(vector<float> amplitudes){
         float xOffset3 = ofRandom(-40, 40);
         float yOffset3 = ofRandom(-40, 40);
         ofDrawTriangle(ofGetMouseX()+xOffset1, ofGetMouseY()+yOffset1, ofGetMouseX()+xOffset2, ofGetMouseY()+yOffset2, ofGetMouseX()+xOffset3, ofGetMouseY()+yOffset3);
-    }   
+    }
+        
+    ofRectangle rect1(0, ofGetHeight()/1.50,ofGetWidth()/2.50,10) ;
+    ofRectangle rect2(ofGetWidth()/1.50, ofGetHeight()/1.95,ofGetWidth() - ofGetWidth()/1.50,10) ;
+    ofRectangle rect3(ofGetWidth()/1.60, ofGetHeight()/2.05,ofGetWidth() - ofGetWidth()/1.60,10) ;
+    ofRectangle rect4(ofGetWidth()/1.70, ofGetHeight()/2.15,ofGetWidth() - ofGetWidth()/1.70,10) ;
+    ofRectangle rect5(ofGetWidth()/1.80, ofGetHeight()/2.25,ofGetWidth() - ofGetWidth()/1.80,10) ;
+    ofRectangle rect6(ofGetWidth()/1.90, ofGetHeight()/2.35,ofGetWidth() - ofGetWidth()/1.90,10) ;
+    ofRectangle rect7(ofGetWidth()/2.00, ofGetHeight()/2.45,ofGetWidth()/2.00,10) ;
+    vector<ofRectangle> myRects = {rect1,rect2,rect3,rect4,rect5,rect6, rect7};
 
+    vector<int> r = {255,128,0,0,255,255,255};
+    vector<int> g = {255,0,0,128,165,255,0};
+    vector<int> b = {255,128,255,0,0,0,0};
+
+    for(int i =0; i < 7; i++){
+        ofFill();
+        ofSetColor(r[i],g[i],b[i]);
+      //  ofTranslate(myRects[i].getX(), myRects[i].getY());
+     //   ofRotateDeg(15);
+        ofDrawRectangle(myRects[i]);
+    }
+
+  //  ofRotateDeg(0);
+    ofNoFill();
+   // ofSetLineWidth(15);
+    ofSetColor(255,255,255);
+    ofPoint p1;
+    p1.x = ofGetWidth()/2.00;
+    p1.y = ofGetHeight()/3.00 ;
+    ofPoint p2;
+    p2.x = ofGetWidth()/3.00;
+    p2.y = ofGetHeight()/1.50 ;
+    ofPoint p3;
+    p3.x = ofGetWidth()/1.50;
+    p3.y = ofGetHeight()/1.50;
+
+    ofDrawTriangle(p1,p2,p3);
 }
 
 void ofApp::setMode(int key) {
