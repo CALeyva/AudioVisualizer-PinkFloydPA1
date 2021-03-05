@@ -14,6 +14,7 @@ class ofApp : public ofBaseApp{
 		void drawMode2(vector<float> amplitudes);
 		void drawMode3(vector<float> amplitudes);
 		void drawMode4(vector<float> amplitudes);
+		void drawMode5(vector<float> amplitudes);
 
 		void setMode(int key);
 		void setMusic(int key);

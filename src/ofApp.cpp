@@ -5,7 +5,7 @@
 void ofApp::setup(){
     sound.loadSound("beat.wav"); //Loads a sound file (in bin/data/)
     sound.setLoop(true); // Makes the song loop indefinitely
-    sound.setVolume(1); // Sets the song volume
+    sound.setVolume(1.00); // Sets the song volume
     if(mode == '1'){ // Sets the Background Color
         ofSetBackgroundColor(4, 148, 68); // Green colored background 
     }else if(mode == '2'){
@@ -14,7 +14,11 @@ void ofApp::setup(){
         ofSetBackgroundColor(255, 245, 56); // Yellow colored background
     }else if(mode == '4'){
         ofSetBackgroundColor(ofRandom(255), ofRandom(255), ofRandom(255)); // Random colored background
+    }else if(mode == '5'){
+        ofSetBackgroundColor(0,0, 0); // Random colored background
     }
+
+    ofSetRectMode(OF_RECTMODE_CENTER);
 }
 
 //--------------------------------------------------------------
@@ -35,7 +39,7 @@ void ofApp::update(){
             }
             if (keyInFrame) { // If key was recorded in this frame count, press the key
                 switch(playKey){
-                    case '1': case '2': case '3': case '4': case 'p': case 'a':
+                    case '1': case '2': case '3': case '4': case '5': case 'p': case 'a':
                         setMode(playKey);
                         break;
                     case 'z': case 'x': case 'c': case 'v':
@@ -93,6 +97,8 @@ void ofApp::draw(){
         drawMode3(amplitudes);
     }else if(mode == '4'){
         drawMode4(amplitudes);
+    }else if(mode == '5'){
+        drawMode5(amplitudes);
     }
 }
 
@@ -106,6 +112,16 @@ void ofApp::drawMode1(vector<float> amplitudes){
         for (int i = 0.00; i < ofGetWidth(); i+=(ofGetWidth()/64.00)) {
             ofDrawRectangle(i, ofGetHeight() - 100.00, ofGetWidth()/64.00,  amplitudes[i/(ofGetWidth()/64.00)]);
         }
+
+        int numRects = 10;
+        for (int r=0; r<numRects; r++) {
+            ofSetColor(ofRandom(50, 255));
+            float width = ofRandom(5, 20);
+            float height = ofRandom(5, 20);
+            float xOffset1 = ofRandom(-40, 40);
+            float yOffset1 = ofRandom(-40, 40);
+            ofDrawRectangle(ofGetMouseX()+xOffset1, ofGetMouseY()+yOffset1, width, height);
+       } 
     }
 
 void ofApp::drawMode2(vector<float> amplitudes){
@@ -118,6 +134,15 @@ void ofApp::drawMode2(vector<float> amplitudes){
             ofSetColor((bands - i)*32 %256,18,144); // Color varies between frequencies
             ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, amplitudes[0]/(i +1));
         }
+
+       int numRects = 10;
+        for (int r=0; r<numRects; r++) {
+            ofSetColor(ofRandom(50, 255));
+            float width = ofRandom(5, 20);
+            float xOffset1 = ofRandom(-40, 40);
+            float yOffset1 = ofRandom(-40, 40);
+            ofDrawCircle(ofGetMouseX()+xOffset1,ofGetMouseY()+yOffset1, width);
+        } 
 }
 
 void ofApp::drawMode3(vector<float> amplitudes){
@@ -126,6 +151,16 @@ void ofApp::drawMode3(vector<float> amplitudes){
     ofDrawBitmapString("Rectangle Width Visualizer", 0, 15);
     ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
 
+    int numRects = 10;
+    for (int r=0; r<numRects; r++) {
+        ofSetColor(ofRandom(50, 255));
+        float width = ofRandom(5, 20);
+        float height = ofRandom(5, 20);
+        float xOffset1 = ofRandom(-40, 40);
+        float yOffset1 = ofRandom(-40, 40);
+        ofDrawRectangle(ofGetMouseX()+xOffset1, ofGetMouseY()+yOffset1, width, height);
+      } 
+
     ofRotate(90);
     for (int i = 0.00; i < ofGetWidth(); i+=(ofGetWidth()/64.00)) {
         ofDrawRectangle(i, 0.00, ofGetWidth()/64.00,  amplitudes[i/(ofGetWidth()/64.00)]);
@@ -133,9 +168,39 @@ void ofApp::drawMode3(vector<float> amplitudes){
 }
 
 void ofApp::drawMode4(vector<float> amplitudes){
-    ofSetColor(256); // This resets the color of the "brush" to white
+    ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); // This resets the color of the "brush" to white
     ofDrawBitmapString("Custom Visualizer", 0, 15);
-    // YOUR CODE HERE
+    
+    int bands = amplitudes.size();
+    for (int i = 0; i<bands; i++){
+        ofDrawCircle(ofGetWidth()/2, i, amplitudes[0]/(i +1));
+    }
+
+    int numRects = 10;
+    for (int r=0; r<numRects; r++) {
+        ofSetColor(ofRandom(50, 255));
+        float width = ofRandom(5, 20);
+        float xOffset1 = ofRandom(-40, 40);
+        float yOffset1 = ofRandom(-40, 40);
+        ofDrawCircle(ofGetMouseX()+xOffset1,ofGetMouseY()+yOffset1, width);
+    } 
+}
+
+void ofApp::drawMode5(vector<float> amplitudes){
+    ofDrawBitmapString("Custom Visualizer", 0, 15);
+
+    int numRects = 5;
+    for (int r=0; r<numRects; r++) {
+        ofSetColor(ofRandom(50, 255));
+        float xOffset1 = ofRandom(-40, 40);
+        float yOffset1 = ofRandom(-40, 40);
+        float xOffset2 = ofRandom(-40, 40);
+        float yOffset2 = ofRandom(-40, 40);
+        float xOffset3 = ofRandom(-40, 40);
+        float yOffset3 = ofRandom(-40, 40);
+        ofDrawTriangle(ofGetMouseX()+xOffset1, ofGetMouseY()+yOffset1, ofGetMouseX()+xOffset2, ofGetMouseY()+yOffset2, ofGetMouseX()+xOffset3, ofGetMouseY()+yOffset3);
+    }   
+
 }
 
 void ofApp::setMode(int key) {
@@ -155,6 +220,10 @@ void ofApp::setMode(int key) {
         case '4':
             mode = '4';
             ofSetBackgroundColor(ofRandom(255), ofRandom(255), ofRandom(255)); // Random colored background
+            break;
+        case '5':
+            mode = '5';
+            ofSetBackgroundColor(0, 0, 0);
             break;
         case 'p': // Go to main screen
             if(playing) {
@@ -182,41 +251,61 @@ void ofApp::setMode(int key) {
 void ofApp::setMusic(int key) {
     switch(key) {
         case 'z':
-            sound.load("rock-song.wav"); //cambiar cancion a personal
-            sound.play();
-            break;
+            if(mode == 5){
+                sound.load("great-gig.wav"); //cambiar cancion a personal
+                sound.play();
+                break;
+            }
+                sound.load("rock-song.wav"); //cambiar cancion a personal
+                sound.play();
+                break;
         case 'x':
-            sound.load("beat.wav"); //cambiar cancion a personal
-            sound.play();
-            break;
+            if(mode == 5){
+                sound.load("brain-damage.wav"); //cambiar cancion a personal
+                sound.play();
+                break;
+            }
+                sound.load("beat.wav"); //cambiar cancion a personal
+                sound.play();
+                break;
         case 'c':
-            sound.load("geesebeat.wav"); //cambiar cancion a personal
-            sound.play();
-            break;
+            if(mode == 5){
+                sound.load("eclipse.wav"); //cambiar cancion a personal
+                sound.play();
+                break;
+            }
+                sound.load("geesebeat.wav"); //cambiar cancion a personal
+                sound.play();
+                break;
         case 'v':
-            sound.load("pigeon-coo.wav"); //cambiar cancion a personal
-            sound.play();
-            break;
+            if(mode == 5){
+                sound.load("money.wav"); //cambiar cancion a personal
+                sound.play();
+                break;
+            }
+                sound.load("pigeon-coo.wav"); //cambiar cancion a personal
+                sound.play();
+                break;
     }
 }
 
 void ofApp::setVolume(int key) {
     switch(key) {
         case '=': // Increase volume
-            if(sound.getVolume() >= 1.00){
+            if(sound.getVolume() > 0.80){
                 sound.setVolume(1.00);
             }
-            else if(sound.getVolume() >= 0.00 && sound.getVolume() < 1.00){
+            else if(sound.getVolume() >= 0.00 && sound.getVolume() <= 0.80){
                 sound.setVolume(sound.getVolume() + 0.20);
             } else {
                 sound.setVolume(0.00);
             }
             break;
         case '-': // Decrease volume
-            if(sound.getVolume() <= 0.00){
+            if(sound.getVolume() < 0.20){
                 sound.setVolume(0.00);
             }
-            else if(sound.getVolume() > 0.00 && sound.getVolume() <= 1.00){
+            else if(sound.getVolume() >= 0.20 && sound.getVolume() <= 1.00){
                 sound.setVolume(sound.getVolume() - 0.20);
             } else {
                 sound.setVolume(1.00);
@@ -253,7 +342,7 @@ void ofApp::recordPlayback(int key) {
 void ofApp::keyPressed(int key){
     // This method is called automatically when any key is pressed
     switch((playback && key != 't') ? 0 : key){ // Disables keyPressed if in AUTO-PILOT MODE, unless escaping
-        case '1': case '2': case '3': case '4': case 'p': case 'a':
+        case '1': case '2': case '3': case '4': case '5': case 'p': case 'a':
             setMode(key);
             break;
         case 'z': case 'x': case 'c': case 'v':
