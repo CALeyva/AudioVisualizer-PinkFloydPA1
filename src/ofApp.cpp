@@ -170,19 +170,11 @@ void ofApp::drawMode4(vector<float> amplitudes){
     ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); // This resets the color of the "brush" to white
     ofDrawBitmapString("Custom Visualizer", 0, 15);
     
+    ofFill();
     int bands = amplitudes.size();
     for (int i = 0; i<bands; i++){
-        ofDrawCircle(ofGetWidth()/2, i, amplitudes[0]/(i +1));
+        ofDrawCircle(ofGetMouseX(), ofGetMouseY(), amplitudes[0]/(i +1));
     }
-
-    int numRects = 10;
-    for (int r=0; r<numRects; r++) {
-        ofSetColor(ofRandom(50, 255));
-        float width = ofRandom(5, 20);
-        float xOffset1 = ofRandom(-40, 40);
-        float yOffset1 = ofRandom(-40, 40);
-        ofDrawCircle(ofGetMouseX()+xOffset1,ofGetMouseY()+yOffset1, width);
-    } 
 }
 
 void ofApp::drawMode5(vector<float> amplitudes){
@@ -425,7 +417,6 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
 }
 
 //--------------------------------------------------------------
