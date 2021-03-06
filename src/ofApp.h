@@ -50,4 +50,6 @@ class ofApp : public ofBaseApp{
 		std::map<long, int> recordings;
 		
 		char mode = '1';
+
+		ofEasyCam cam;
 };
