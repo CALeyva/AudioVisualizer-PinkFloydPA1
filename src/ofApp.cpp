@@ -18,6 +18,7 @@ void ofApp::setup(){
         ofSetBackgroundColor(0,0, 0); // Random colored background
     }
     ofSetRectMode(OF_RECTMODE_CENTER); //check
+    ofEnableSmoothing();
 }
 
 //--------------------------------------------------------------
@@ -169,6 +170,7 @@ void ofApp::drawMode3(vector<float> amplitudes){
 void ofApp::drawMode4(vector<float> amplitudes){
     ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); // This resets the color of the "brush" to white
     ofDrawBitmapString("Custom Visualizer", 0, 15);
+    ofSetCircleResolution(6);
     
     ofFill();
     int bands = amplitudes.size();
