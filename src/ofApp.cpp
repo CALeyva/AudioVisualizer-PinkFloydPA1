@@ -189,6 +189,7 @@ void ofApp::drawMode4(vector<float> amplitudes){
 void ofApp::drawMode5(vector<float> amplitudes){
     ofDrawBitmapString("Custom Visualizer", 0, 15);
 
+    ofSetLineWidth(1);
     int numRects = 5;
     for (int r=0; r<numRects; r++) {
         ofSetColor(ofRandom(50, 255));
@@ -200,32 +201,41 @@ void ofApp::drawMode5(vector<float> amplitudes){
         float yOffset3 = ofRandom(-40, 40);
         ofDrawTriangle(ofGetMouseX()+xOffset1, ofGetMouseY()+yOffset1, ofGetMouseX()+xOffset2, ofGetMouseY()+yOffset2, ofGetMouseX()+xOffset3, ofGetMouseY()+yOffset3);
     }
-        
-    ofRectangle rect1(0, ofGetHeight()/1.50,ofGetWidth()/2.50,10) ;
-    ofRectangle rect2(ofGetWidth()/1.50, ofGetHeight()/1.95,ofGetWidth() - ofGetWidth()/1.50,10) ;
-    ofRectangle rect3(ofGetWidth()/1.60, ofGetHeight()/2.05,ofGetWidth() - ofGetWidth()/1.60,10) ;
-    ofRectangle rect4(ofGetWidth()/1.70, ofGetHeight()/2.15,ofGetWidth() - ofGetWidth()/1.70,10) ;
-    ofRectangle rect5(ofGetWidth()/1.80, ofGetHeight()/2.25,ofGetWidth() - ofGetWidth()/1.80,10) ;
-    ofRectangle rect6(ofGetWidth()/1.90, ofGetHeight()/2.35,ofGetWidth() - ofGetWidth()/1.90,10) ;
-    ofRectangle rect7(ofGetWidth()/2.00, ofGetHeight()/2.45,ofGetWidth()/2.00,10) ;
+ 
+    ofRectangle rect1(0,ofGetHeight()/1.50, ofGetWidth()/2,10) ; //white rectangle
+    ofRectangle rect2(ofGetWidth()/1.05, ofGetHeight()/3.00,ofGetWidth()/2,15) ; //purple rectangle
+    ofRectangle rect3(ofGetWidth()/1.07, ofGetHeight()/3.20,ofGetWidth()/2,15) ; //blue rectangle
+    ofRectangle rect4(ofGetWidth()/1.09, ofGetHeight()/3.40,ofGetWidth()/2,15) ; //green rectangle
+
+    ofRectangle rect5(ofGetWidth()/1.11, ofGetHeight()/3.65,ofGetWidth()/2,15) ; //yello rectangle
+    ofRectangle rect6(ofGetWidth()/1.13, ofGetHeight()/3.95,ofGetWidth()/2,15) ; //orange rectangle
+    ofRectangle rect7(ofGetWidth()/1.15, ofGetHeight()/4.30,ofGetWidth()/2,15) ; //red rectangle
     vector<ofRectangle> myRects = {rect1,rect2,rect3,rect4,rect5,rect6, rect7};
 
     vector<int> r = {255,128,0,0,255,255,255};
     vector<int> g = {255,0,0,128,165,255,0};
     vector<int> b = {255,128,255,0,0,0,0};
-
-    for(int i =0; i < 7; i++){
-        ofFill();
+    
+    int i = 1;
+    ofFill();
+    do {
         ofSetColor(r[i],g[i],b[i]);
-      //  ofTranslate(myRects[i].getX(), myRects[i].getY());
-     //   ofRotateDeg(15);
+        ofPushMatrix();
+        ofRotateDeg(15);
         ofDrawRectangle(myRects[i]);
+        ofPopMatrix();
+        i++;
     }
+    while ( i < myRects.size());
 
-  //  ofRotateDeg(0);
+    ofSetColor(r[0],g[0],b[0]);
+    ofPushMatrix();
+    ofRotateDeg(335);
+    ofDrawRectangle(myRects[0]);
+    ofPopMatrix();
+
     ofNoFill();
-   // ofSetLineWidth(15);
-    ofSetColor(255,255,255);
+    ofSetLineWidth(15);
     ofPoint p1;
     p1.x = ofGetWidth()/2.00;
     p1.y = ofGetHeight()/3.00 ;
@@ -259,7 +269,7 @@ void ofApp::setMode(int key) {
             break;
         case '5':
             mode = '5';
-            ofSetBackgroundColor(0, 0, 0);
+            ofSetBackgroundColor(0, 0, 0); //black background
             break;
         case 'p': // Go to main screen
             if(playing) {
@@ -288,38 +298,38 @@ void ofApp::setMusic(int key) {
     switch(key) {
         case 'z':
             if(mode == 5){
-                sound.load("great-gig.wav"); //cambiar cancion a personal
+                sound.load("great-gig.wav");
                 sound.play();
                 break;
             }
-                sound.load("rock-song.wav"); //cambiar cancion a personal
+                sound.load("rock-song.wav");
                 sound.play();
                 break;
         case 'x':
             if(mode == 5){
-                sound.load("brain-damage.wav"); //cambiar cancion a personal
+                sound.load("brain-damage.wav");
                 sound.play();
                 break;
             }
-                sound.load("beat.wav"); //cambiar cancion a personal
+                sound.load("beat.wav");
                 sound.play();
                 break;
         case 'c':
             if(mode == 5){
-                sound.load("eclipse.wav"); //cambiar cancion a personal
+                sound.load("eclipse.wav");
                 sound.play();
                 break;
             }
-                sound.load("geesebeat.wav"); //cambiar cancion a personal
+                sound.load("geesebeat.wav");
                 sound.play();
                 break;
         case 'v':
             if(mode == 5){
-                sound.load("money.wav"); //cambiar cancion a personal
+                sound.load("money.wav");
                 sound.play();
                 break;
             }
-                sound.load("pigeon-coo.wav"); //cambiar cancion a personal
+                sound.load("pigeon-coo.wav");
                 sound.play();
                 break;
     }
