@@ -182,33 +182,33 @@ void ofApp::drawMode4(vector<float> amplitudes){
 
 void ofApp::drawMode5(vector<float> amplitudes){
     ofDrawBitmapString("Bonus Visualizer: Pink Floyd Edition", 0, 15);
-
-    ofSetLineWidth(1);
-    int numRects = 5;
-    for (int r=0; r<numRects; r++) {
-        ofSetColor(ofRandom(50, 255));
-        float xOffset1 = ofRandom(-40, 40);
-        float yOffset1 = ofRandom(-40, 40);
-        float xOffset2 = ofRandom(-40, 40);
-        float yOffset2 = ofRandom(-40, 40);
-        float xOffset3 = ofRandom(-40, 40);
-        float yOffset3 = ofRandom(-40, 40);
-        ofDrawTriangle(ofGetMouseX()+xOffset1, ofGetMouseY()+yOffset1, ofGetMouseX()+xOffset2, ofGetMouseY()+yOffset2, ofGetMouseX()+xOffset3, ofGetMouseY()+yOffset3);
-    }
  
-    ofRectangle rect1(0,ofGetHeight()/1.50, ofGetWidth()/2,10) ; //white rectangle
-    ofRectangle rect2(ofGetWidth()/1.05, ofGetHeight()/3.00,ofGetWidth()/2,15) ; //purple rectangle
-    ofRectangle rect3(ofGetWidth()/1.07, ofGetHeight()/3.20,ofGetWidth()/2,15) ; //blue rectangle
-    ofRectangle rect4(ofGetWidth()/1.09, ofGetHeight()/3.40,ofGetWidth()/2,15) ; //green rectangle
+    ofRectangle rect1(0,ofGetWindowHeight()/1.50, ofGetWindowWidth()/2,10) ; //white rectangle
+    ofRectangle rect2(ofGetWindowWidth()/1.05, ofGetWindowHeight()/3.00,ofGetWindowWidth()/2,15) ; //purple rectangle
+    ofRectangle rect3(ofGetWindowWidth()/1.07, ofGetWindowHeight()/3.20,ofGetWindowWidth()/2,15) ; //blue rectangle
+    ofRectangle rect4(ofGetWindowWidth()/1.09, ofGetWindowHeight()/3.40,ofGetWindowWidth()/2,15) ; //green rectangle
 
-    ofRectangle rect5(ofGetWidth()/1.11, ofGetHeight()/3.65,ofGetWidth()/2,15) ; //yellow rectangle
-    ofRectangle rect6(ofGetWidth()/1.13, ofGetHeight()/3.95,ofGetWidth()/2,15) ; //orange rectangle
-    ofRectangle rect7(ofGetWidth()/1.15, ofGetHeight()/4.30,ofGetWidth()/2,15) ; //red rectangle
+    ofRectangle rect5(ofGetWindowWidth()/1.11, ofGetWindowHeight()/3.65,ofGetWindowWidth()/2,15) ; //yellow rectangle
+    ofRectangle rect6(ofGetWindowWidth()/1.13, ofGetWindowHeight()/3.95,ofGetWindowWidth()/2,15) ; //orange rectangle
+    ofRectangle rect7(ofGetWindowWidth()/1.15, ofGetWindowHeight()/4.30,ofGetWindowWidth()/2,15) ; //red rectangle
     vector<ofRectangle> myRects = {rect1,rect2,rect3,rect4,rect5,rect6, rect7};
 
     vector<int> r = {255,128,0,0,255,255,255};
     vector<int> g = {255,0,0,128,255,165,0};
     vector<int> b = {255,128,255,0,0,0,0};
+
+    ofPushMatrix();
+    ofTranslate(ofGetWindowWidth() / 2, ofGetWindowHeight() / 1.80);
+    ofNoFill();
+    ofSetLineWidth(2);
+    for (int i = 0; i < 30; i++){
+        ofSetColor(ofRandom(255),ofRandom(255), ofRandom(255));
+        ofRotateDeg(ofGetElapsedTimef());
+        ofScale(0.9);
+        ofDrawTriangle(500,500,1000,1000,1500,500);
+
+    }
+    ofPopMatrix();
     
     int i = 1;
     ofFill();
@@ -229,16 +229,16 @@ void ofApp::drawMode5(vector<float> amplitudes){
     ofPopMatrix();
 
     ofNoFill();
-    ofSetLineWidth(15);
+    ofSetLineWidth(10);
     ofPoint p1;
-    p1.x = ofGetWidth()/2.00;
-    p1.y = ofGetHeight()/3.00 ;
+    p1.x = ofGetWindowWidth()/2.00;
+    p1.y = ofGetWindowHeight()/3.00 ;
     ofPoint p2;
-    p2.x = ofGetWidth()/3.00;
-    p2.y = ofGetHeight()/1.50 ;
+    p2.x = ofGetWindowWidth()/3.00;
+    p2.y = ofGetWindowHeight()/1.50 ;
     ofPoint p3;
-    p3.x = ofGetWidth()/1.50;
-    p3.y = ofGetHeight()/1.50;
+    p3.x = ofGetWindowWidth()/1.50;
+    p3.y = ofGetWindowHeight()/1.50;
 
     ofDrawTriangle(p1,p2,p3);
 }
@@ -264,6 +264,7 @@ void ofApp::setMode(int key) {
         case '5':
             mode = '5';
             ofSetBackgroundColor(0, 0, 0); //black background
+            setMusic('v');
             break;
         case 'p': // Go to main screen
             if(playing) {
