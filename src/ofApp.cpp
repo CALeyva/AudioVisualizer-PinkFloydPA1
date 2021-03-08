@@ -11,6 +11,7 @@ void ofApp::setup(){
 
     ofHideCursor(); //Hides cursor
     sound.loadSound("beat.wav"); //Loads a sound file (in bin/data/)
+    songPlayingID = 1;
     sound.setLoop(true); // Makes the song loop indefinitely
     sound.setVolume(1.00); // Sets the song volume
 
@@ -56,7 +57,7 @@ void ofApp::update(){
                     case '1': case '2': case '3': case '4': case '5': case 'p': case 'a':
                         setMode(playKey);
                         break;
-                    case 'z': case 'x': case 'c': case 'v':
+                    case 'z': case 'x': case 'c': case 'v': case '[': case ']':
                         setMusic(playKey);
                         break;
                     case '=': case '-':
@@ -101,6 +102,8 @@ void ofApp::draw(){
         ofDrawBitmapString("Press '=' or '-' to raise or lower volume", ofGetWidth()/2 - 150, (ofGetHeight()/2) + 25);
         ofDrawBitmapString("Press 'r' to start/stop recording with the beat!", ofGetWidth()/2 - 150, (ofGetHeight()/2) + 50);
         ofDrawBitmapString("Press 't' after recording for AUTO-PILOT MODE!", ofGetWidth()/2 - 150, (ofGetHeight()/2) + 75);
+    } else {
+        ofDrawBitmapString(songTitles[songPlayingID], (ofGetWidth()/2) - (songTitles[songPlayingID].length() * 3), ofGetHeight() - 25);
     }
 
     vector<float> amplitudes = visualizer.getAmplitudes();
@@ -120,7 +123,7 @@ void ofApp::draw(){
 void ofApp::drawMode1(vector<float> amplitudes){
         ofFill(); // Drawn Shapes will be filled in with color
         ofSetColor(256); // This resets the color of the "brush" to white
-        ofDrawBitmapString("Rectangle Height Visualizer", 0, 15);
+        ofDrawBitmapString("Vertical Rectangle Visualizer", 0, 15);
         ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
         
         // Sets bar widths across the entire window
@@ -165,7 +168,7 @@ void ofApp::drawMode2(vector<float> amplitudes){
 void ofApp::drawMode3(vector<float> amplitudes){
     ofFill(); // Drawn Shapes will be filled in with color
     ofSetColor(256); // This resets the color of the "brush" to white
-    ofDrawBitmapString("Rectangle Width Visualizer", 0, 15);
+    ofDrawBitmapString("Horizontal Rectangle Visualizer", 0, 15);
     ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
     
      /* Creates the cursor shapes */
@@ -197,7 +200,7 @@ void ofApp::drawMode4(vector<float> amplitudes){
     ofDrawCircle(x,y,3);
 
     ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); // This resets the color of the "brush" to white
-    ofDrawBitmapString("Custom Visualizer", 0, 15);
+    ofDrawBitmapString("Hexagon Visualizer", 0, 15);
     ofSetSphereResolution(6); //gives cirlce hexagon shape
 
     /* Creates the hexagon following the cursor with the 64 amplitudes*/
@@ -291,7 +294,9 @@ void ofApp::setMode(int key) {
         case '5':
             mode = '5';
             ofSetBackgroundColor(0, 0, 0); //black background
-            setMusic('v');
+            if (songPlayingID < 3) { // If Pink Floyd is not playing, you're doing it wrong...
+                setMusic('v');
+            }
             break;
         case 'p': // Go to main screen
             if(playing) {
@@ -319,39 +324,65 @@ void ofApp::setMode(int key) {
 void ofApp::setMusic(int key) {
     switch(key) {
         case 'z':
-            if(mode == '5'){ //only in mode 5, songs change to pink floyd
+            if(mode == '5'){ //only in mode 5, preset songs change to pink floyd
                 sound.load("great-gig.wav");
                 sound.play();
+                songPlayingID = 4;
                 break;
             }
             sound.load("rock-song.wav");
             sound.play();
+            songPlayingID = 0;
             break;
         case 'x':
             if(mode == '5'){
                 sound.load("brain-damage.wav");
                 sound.play();
+                songPlayingID = 5;
                 break;
             }
             sound.load("beat.wav");
             sound.play();
+            songPlayingID = 1;
             break;
         case 'c':
             if(mode == '5'){
                 sound.load("eclipse.wav");
                 sound.play();
+                songPlayingID = 6;
                 break;
             }
             sound.load("geesebeat.wav");
             sound.play();
+            songPlayingID = 2;
             break;
         case 'v':
             if(mode == '5'){
                 sound.load("money.wav");
                 sound.play();
+                songPlayingID = 7;
                 break;
             }
             sound.load("pigeon-coo.wav");
+            sound.play();
+            songPlayingID = 3;
+            break;
+        case '[':
+            if (songPlayingID != 0) {
+                songPlayingID -= 1;
+            } else {
+                songPlayingID = playlist.size() - 1;
+            }
+            sound.load(playlist[songPlayingID]);
+            sound.play();
+            break;
+        case ']':
+            if (songPlayingID != playlist.size() - 1) {
+                songPlayingID += 1;
+            } else {
+                songPlayingID = 0;
+            }
+            sound.load(playlist[songPlayingID]);
             sound.play();
             break;
     }
@@ -413,7 +444,7 @@ void ofApp::keyPressed(int key){
         case '1': case '2': case '3': case '4': case '5': case 'p': case 'a':
             setMode(key);
             break;
-        case 'z': case 'x': case 'c': case 'v':
+        case 'z': case 'x': case 'c': case 'v': case '[': case ']':
             setMusic(key);
             break;
         case '=': case '-':

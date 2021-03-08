@@ -37,6 +37,10 @@ class ofApp : public ofBaseApp{
 		ofSoundPlayer sound;
 		AudioVisualizer visualizer;
 		
+		vector<string> playlist = {"rock-song.wav", "beat.wav", "geesebeat.wav", "pigeon-coo.wav", "great-gig.wav", "brain-damage.wav", "eclipse.wav", "money.wav", "ComfortablyNumb.wav", "Time.wav"};
+		vector<string> songTitles = {"Rock", "Beat", "Geesebeat", "Pidgeon Trap", "Great Gig - Pink Floyd", "Brain Damage - Pink Floyd", "Eclipse - Pink Floyd", "Money - Pink Floyd", "Comfortably Numb - Pink Floyd", "Time - Pink Floyd"};
+		int songPlayingID;
+
 		bool playing = false;
 		bool pauseDraw = false;
 
