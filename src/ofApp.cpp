@@ -3,6 +3,10 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    ofHideCursor();
+    windowHeight = ofGetHeight();
+    windowWidth = ofGetWidth();
+    // aspectRatio = windowWidth / windowHeight;
     sound.loadSound("beat.wav"); //Loads a sound file (in bin/data/)
     sound.setLoop(true); // Makes the song loop indefinitely
     sound.setVolume(1.00); // Sets the song volume
@@ -17,7 +21,7 @@ void ofApp::setup(){
     }else if(mode == '5'){
         ofSetBackgroundColor(0,0, 0); // Random colored background
     }
-    ofSetRectMode(OF_RECTMODE_CENTER); //check
+    //ofSetRectMode(OF_RECTMODE_CENTER); //check
     ofEnableSmoothing();
 }
 
@@ -79,13 +83,14 @@ void ofApp::draw(){
 
     if(!playing){
         ofSetColor(256);
-        ofDrawBitmapString("Press 'p' to enter or exit starting menu", ofGetWidth()/2 - 125, (ofGetHeight()/2) - 75);
-        ofDrawBitmapString("Press 'a' to pause song and visuals", ofGetWidth()/2 - 125, (ofGetHeight()/2) - 50);
-        ofDrawBitmapString("Press 'z', 'x', 'c' or 'v' to change songs", ofGetWidth()/2 - 125, (ofGetHeight()/2) - 25);
-        ofDrawBitmapString("Press '1', '2', '3' or '4' to change visual modes", ofGetWidth()/2 - 125, ofGetHeight()/2);
-        ofDrawBitmapString("Press '=' or '-' to raise or lower volume", ofGetWidth()/2 - 125, (ofGetHeight()/2) + 25);
-        ofDrawBitmapString("Press 'r' to start/stop recording with the beat!", ofGetWidth()/2 - 125, (ofGetHeight()/2) + 50);
-        ofDrawBitmapString("Press 't' after recording for AUTO-PILOT MODE!", ofGetWidth()/2 - 125, (ofGetHeight()/2) + 75);
+        // UPDATE
+        ofDrawBitmapString("Press 'p' to enter or exit starting menu", ofGetWidth()/2 - 150, (ofGetHeight()/2) - 75);
+        ofDrawBitmapString("Press 'a' to pause song and visuals", ofGetWidth()/2 - 150, (ofGetHeight()/2) - 50);
+        ofDrawBitmapString("Press 'z', 'x', 'c' or 'v' to change songs", ofGetWidth()/2 - 150, (ofGetHeight()/2) - 25);
+        ofDrawBitmapString("Press '1', '2', '3' or '4' to change visual modes", ofGetWidth()/2 - 150, ofGetHeight()/2);
+        ofDrawBitmapString("Press '=' or '-' to raise or lower volume", ofGetWidth()/2 - 150, (ofGetHeight()/2) + 25);
+        ofDrawBitmapString("Press 'r' to start/stop recording with the beat!", ofGetWidth()/2 - 150, (ofGetHeight()/2) + 50);
+        ofDrawBitmapString("Press 't' after recording for AUTO-PILOT MODE!", ofGetWidth()/2 - 150, (ofGetHeight()/2) + 75);
     }
 
     vector<float> amplitudes = visualizer.getAmplitudes();
@@ -168,6 +173,12 @@ void ofApp::drawMode3(vector<float> amplitudes){
 }
 
 void ofApp::drawMode4(vector<float> amplitudes){
+    // circle moving around screen
+    float x = ofMap( ofNoise( ofGetElapsedTimef()/2.0, -1000), 0, 1, 0, ofGetWidth());
+    float y = ofMap( ofNoise( ofGetElapsedTimef()/2.0, 1000), 0, 1, 0, ofGetHeight());
+    ofNoFill();
+    ofDrawCircle(x,y,3);
+
     ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); // This resets the color of the "brush" to white
     ofDrawBitmapString("Custom Visualizer", 0, 15);
     ofSetSphereResolution(6);
@@ -181,21 +192,82 @@ void ofApp::drawMode4(vector<float> amplitudes){
 }
 
 void ofApp::drawMode5(vector<float> amplitudes){
-    ofDrawBitmapString("Bonus Visualizer: Pink Floyd Edition", 0, 15);
- 
-    ofRectangle rect1(0,ofGetWindowHeight()/1.50, ofGetWindowWidth()/2,10) ; //white rectangle
-    ofRectangle rect2(ofGetWindowWidth()/1.05, ofGetWindowHeight()/3.00,ofGetWindowWidth()/2,15) ; //purple rectangle
-    ofRectangle rect3(ofGetWindowWidth()/1.07, ofGetWindowHeight()/3.20,ofGetWindowWidth()/2,15) ; //blue rectangle
-    ofRectangle rect4(ofGetWindowWidth()/1.09, ofGetWindowHeight()/3.40,ofGetWindowWidth()/2,15) ; //green rectangle
+    ofDrawBitmapString("Pink Floyd Edition", 0, 15);
 
-    ofRectangle rect5(ofGetWindowWidth()/1.11, ofGetWindowHeight()/3.65,ofGetWindowWidth()/2,15) ; //yellow rectangle
-    ofRectangle rect6(ofGetWindowWidth()/1.13, ofGetWindowHeight()/3.95,ofGetWindowWidth()/2,15) ; //orange rectangle
-    ofRectangle rect7(ofGetWindowWidth()/1.15, ofGetWindowHeight()/4.30,ofGetWindowWidth()/2,15) ; //red rectangle
-    vector<ofRectangle> myRects = {rect1,rect2,rect3,rect4,rect5,rect6, rect7};
+    // VIEJO
+    // ofNoFill();
+    // ofBeginShape();
+    // for (int i = 0; i < ofGetWidth()/2; i+=(ofGetWidth()/128.0)) {
+    //     float x = i;
+    //     //float noise = ofNoise(i/100.0);
+    //     float y = ofMap(amplitudes[i/(ofGetWidth()/128.0)], 50,ofGetWidth()/2, 50, 100);
+    //     ofVertex(x,y);
+    // }
+    // ofEndShape();
 
+    // ofNoFill();
+    // ofBeginShape();
+    // for (int i = 0; i < 500; i++){
+    //     float x = i;
+    //     float noise = ofNoise(i/100.0);
+    //     float y = ofMap(amplitudes[i], 0,1, (ofGetWidth()/2), (ofGetWidth()/2));
+    //     ofVertex(x,y);
+    // }
+    // ofEndShape();
+
+    // Drawing I/O waves
+    // TODO: JUNTAR WAVES CON TRIANGULO Y SCALE
     vector<int> r = {255,128,0,0,255,255,255};
     vector<int> g = {255,0,0,128,255,165,0};
     vector<int> b = {255,128,255,0,0,0,0};
+    double translateAllLeftX = -75;
+    vector<double> translateX = {-100, (ofGetWindowWidth()/1.4) + translateAllLeftX, (ofGetWindowWidth()/1.44) + translateAllLeftX, (ofGetWindowWidth()/1.47) + translateAllLeftX, (ofGetWindowWidth()/1.51) + translateAllLeftX, (ofGetWindowWidth()/1.55) + translateAllLeftX, (ofGetWindowWidth()/1.59) + translateAllLeftX};
+    vector<double> translateY = {-100, ofGetWindowHeight()/3.0, ofGetWindowHeight()/3.2, ofGetWindowHeight()/3.4, ofGetWindowHeight()/3.65, ofGetWindowHeight()/3.95, ofGetWindowHeight()/4.3};
+    vector<int> side = {1, 1, 1, 1, 1, 1, 1};
+    vector<double> amplitudeChange = {1.0, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25};
+    for (int i = 0; i < side.size(); i++) {
+        ofPushMatrix();
+        ofSetColor(r[i],g[i],b[i]);
+        ofTranslate(translateX[i],(ofGetWindowHeight()/4) + translateY[i]);
+        ofRotateDeg(31 * side[i]);
+        ofNoFill();
+        int spacing = 50;
+        ofBeginShape();
+        for(int x=0; x < (ofGetWidth()/2) + 175; x += spacing) {
+            ofCurveVertex(x, amplitudeChange[i] * amplitudes[0] * 0.3f * sin(x*0.01f + ofGetFrameNum() * 0.02f));
+        }
+        ofEndShape(false);
+        ofPopMatrix();
+    }
+
+    // VIEJO
+    // ofPushMatrix();
+    // ofTranslate(ofGetWindowWidth()/(ofGetWindowWidth()-5), ofGetWindowHeight()); //codigo que maybe nos ayude for bonus
+    // ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
+    // int bands = amplitudes.size();
+    // for (int i=0.00; i< bands; i++) {
+    //     ofPolyline polyline;
+    //     for (int j = 0.00; j < ofGetWidth(); j+=ofGetWidth()/128.00) {
+    //      //   ofSetColor((bands - i)*32 %256,18,144);
+    //         polyline.addVertex(j, amplitudes[j/(ofGetWidth()/128.00)]);
+    //     }
+    //     polyline.draw();
+    //  }
+    //  ofPopMatrix();
+ 
+    // ofRectangle rect1(0,ofGetWindowHeight()/1.50, ofGetWindowWidth()/2,10) ; //white rectangle
+    // ofRectangle rect2(ofGetWindowWidth()/1.05, ofGetWindowHeight()/3.00,ofGetWindowWidth()/2,15) ; //purple rectangle
+    // ofRectangle rect3(ofGetWindowWidth()/1.07, ofGetWindowHeight()/3.20,ofGetWindowWidth()/2,15) ; //blue rectangle
+    // ofRectangle rect4(ofGetWindowWidth()/1.09, ofGetWindowHeight()/3.40,ofGetWindowWidth()/2,15) ; //green rectangle
+
+    // ofRectangle rect5(ofGetWindowWidth()/1.11, ofGetWindowHeight()/3.65,ofGetWindowWidth()/2,15) ; //yellow rectangle
+    // ofRectangle rect6(ofGetWindowWidth()/1.13, ofGetWindowHeight()/3.95,ofGetWindowWidth()/2,15) ; //orange rectangle
+    // ofRectangle rect7(ofGetWindowWidth()/1.15, ofGetWindowHeight()/4.30,ofGetWindowWidth()/2,15) ; //red rectangle
+    // vector<ofRectangle> myRects = {rect1, rect2,rect3,rect4,rect5,rect6, rect7};
+
+    // vector<int> r = {255,128,0,0,255,255,255};
+    // vector<int> g = {255,0,0,128,255,165,0};
+    // vector<int> b = {255,128,255,0,0,0,0};
 
     ofPushMatrix();
     ofTranslate(ofGetWindowWidth() / 2, ofGetWindowHeight() / 1.80);
@@ -206,41 +278,47 @@ void ofApp::drawMode5(vector<float> amplitudes){
         ofRotateDeg(ofGetElapsedTimef());
         ofScale(0.9);
         ofDrawTriangle(500,500,1000,1000,1500,500);
-
     }
     ofPopMatrix();
     
-    int i = 1;
-    ofFill();
-    do {
-        ofSetColor(r[i],g[i],b[i]);
-        ofPushMatrix();
-        ofRotateDeg(15);
-        ofDrawRectangle(myRects[i]);
-        ofPopMatrix();
-        i++;
-    }
-    while ( i < myRects.size());
+    // int i = 1;
+    // ofFill();
+    // do {
+    //     ofSetColor(r[i],g[i],b[i]);
+    //     ofPushMatrix();
+    //     ofRotateDeg(15);
+    //     ofDrawRectangle(myRects[i]);
+    //     ofPopMatrix();
+    //     i++;
+    // }
+    // while ( i < myRects.size());
 
-    ofSetColor(r[0],g[0],b[0]);
-    ofPushMatrix();
-    ofRotateDeg(335);
-    ofDrawRectangle(myRects[0]);
-    ofPopMatrix();
+    // ofSetColor(r[0],g[0],b[0]);
+    // ofPushMatrix();
+    // ofRotateDeg(335);
+    // ofDrawRectangle(myRects[0]);
+    // ofPopMatrix();
 
+    ofSetColor(256);
     ofNoFill();
     ofSetLineWidth(10);
     ofPoint p1;
-    p1.x = ofGetWindowWidth()/2.00;
-    p1.y = ofGetWindowHeight()/3.00 ;
+    p1.x = (ofGetWindowWidth()/2.00); // changeInWidth * 
+    p1.y = (ofGetWindowHeight()/3.00); // changeInHeight * 
     ofPoint p2;
-    p2.x = ofGetWindowWidth()/3.00;
-    p2.y = ofGetWindowHeight()/1.50 ;
+    p2.x = (ofGetWindowWidth()/3.00);
+    p2.y = (ofGetWindowHeight()/1.50);
     ofPoint p3;
-    p3.x = ofGetWindowWidth()/1.50;
-    p3.y = ofGetWindowHeight()/1.50;
+    p3.x = (ofGetWindowWidth()/1.50);
+    p3.y = (ofGetWindowHeight()/1.50);
+    // p1.scale(changeInWidth, changeInHeight, 1);
+    // p2.scale(changeInWidth, changeInHeight);
+    // p3.scale(changeInWidth, changeInHeight);
 
+
+    // TODO: SCALING
     ofDrawTriangle(p1,p2,p3);
+    // ofScale((changeInWidth / changeInHeight));
 }
 
 void ofApp::setMode(int key) {
@@ -297,18 +375,18 @@ void ofApp::setMusic(int key) {
                 sound.play();
                 break;
             }
-                sound.load("rock-song.wav");
-                sound.play();
-                break;
+            sound.load("rock-song.wav");
+            sound.play();
+            break;
         case 'x':
             if(mode == '5'){
                 sound.load("brain-damage.wav");
                 sound.play();
                 break;
             }
-                sound.load("beat.wav");
-                sound.play();
-                break;
+            sound.load("beat.wav");
+            sound.play();
+            break;
         case 'c':
             if(mode == '5'){
                 sound.load("eclipse.wav");
@@ -324,9 +402,9 @@ void ofApp::setMusic(int key) {
                 sound.play();
                 break;
             }
-                sound.load("pigeon-coo.wav");
-                sound.play();
-                break;
+            sound.load("pigeon-coo.wav");
+            sound.play();
+            break;
     }
 }
 
@@ -440,7 +518,9 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+    changeInHeight = (ofGetHeight() - windowHeight) / windowHeight;
+    changeInWidth = (ofGetWidth() - windowWidth) / windowWidth;
+    //aspectRatio = 
 }
 
 //--------------------------------------------------------------

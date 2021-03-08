@@ -48,6 +48,12 @@ class ofApp : public ofBaseApp{
 		int playKey;
 		bool keyInFrame;
 		std::map<long, int> recordings;
+
+		int windowHeight;
+		int windowWidth;
+		double changeInHeight = 1.0;
+		double changeInWidth = 1.0;
+		//double aspectRatio;
 		
 		char mode = '1';
 
