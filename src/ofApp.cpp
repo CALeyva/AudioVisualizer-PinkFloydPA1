@@ -3,14 +3,19 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    ofHideCursor();
-    windowHeight = ofGetHeight();
     windowWidth = ofGetWidth();
-    // aspectRatio = windowWidth / windowHeight;
+    windowHeight = ofGetHeight();
+    windowScale = 1.0f;
+    widthScaled = windowWidth * windowScale;
+    heightScaled = windowHeight * windowScale;
+
+    ofHideCursor(); //Hides cursor
     sound.loadSound("beat.wav"); //Loads a sound file (in bin/data/)
     sound.setLoop(true); // Makes the song loop indefinitely
     sound.setVolume(1.00); // Sets the song volume
-    if(mode == '1'){ // Sets the Background Color
+
+    /* Sets the Background Color */
+    if(mode == '1'){ 
         ofSetBackgroundColor(4, 148, 68); // Green colored background 
     }else if(mode == '2'){
         ofSetBackgroundColor(251, 4, 4); // Red colored background
@@ -21,14 +26,19 @@ void ofApp::setup(){
     }else if(mode == '5'){
         ofSetBackgroundColor(0,0, 0); // Random colored background
     }
-    //ofSetRectMode(OF_RECTMODE_CENTER); //check
-    ofEnableSmoothing();
+    ofEnableSmoothing(); //smoothens color and shapes
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-    /* The update method is called muliple times per second
+        /* The update method is called muliple times per second
     It's in charge of updating variables and the logic of our app */
+
+    /* Updates if scale changed */
+    if (scaleDirFixed) {
+        scaleDirFixed = false;
+    }
+
     if (recording || playback) {
         counter++; // Counting frames passed
     }
@@ -118,6 +128,7 @@ void ofApp::drawMode1(vector<float> amplitudes){
             ofDrawRectangle(i, ofGetHeight() - 100.00, ofGetWidth()/64.00,  amplitudes[i/(ofGetWidth()/64.00)]);
         }
 
+    /* Creates the cursor shapes */
         int numRects = 10;
         for (int r=0; r<numRects; r++) {
             ofSetColor(ofRandom(50, 255));
@@ -140,8 +151,9 @@ void ofApp::drawMode2(vector<float> amplitudes){
             ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, amplitudes[0]/(i +1));
         }
 
-       int numRects = 10;
-        for (int r=0; r<numRects; r++) {
+     /* Creates the cursor shapes */
+       int numCircles = 10;
+        for (int r=0; r<numCircles; r++) {
             ofSetColor(ofRandom(50, 255));
             float width = ofRandom(5, 20);
             float xOffset1 = ofRandom(-40, 40);
@@ -155,7 +167,8 @@ void ofApp::drawMode3(vector<float> amplitudes){
     ofSetColor(256); // This resets the color of the "brush" to white
     ofDrawBitmapString("Rectangle Width Visualizer", 0, 15);
     ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
-
+    
+     /* Creates the cursor shapes */
     int numRects = 10;
     for (int r=0; r<numRects; r++) {
         ofSetColor(ofRandom(50, 255));
@@ -166,10 +179,14 @@ void ofApp::drawMode3(vector<float> amplitudes){
         ofDrawRectangle(ofGetMouseX()+xOffset1, ofGetMouseY()+yOffset1, width, height);
       } 
 
-    ofRotate(90);
+    
+     /* Creates the rectangles rotated 90 degress */
+    ofPushMatrix(); //push the current coordinate position
+    ofRotateDeg(90);
     for (int i = 0.00; i < ofGetWidth(); i+=(ofGetWidth()/64.00)) {
         ofDrawRectangle(i, 0.00, ofGetWidth()/64.00,  amplitudes[i/(ofGetWidth()/64.00)]);
     }
+    ofPopMatrix(); //recall the pushed coordinate position
 }
 
 void ofApp::drawMode4(vector<float> amplitudes){
@@ -181,94 +198,20 @@ void ofApp::drawMode4(vector<float> amplitudes){
 
     ofSetColor(ofRandom(255),ofRandom(255),ofRandom(255)); // This resets the color of the "brush" to white
     ofDrawBitmapString("Custom Visualizer", 0, 15);
-    ofSetSphereResolution(6);
-    
+    ofSetSphereResolution(6); //gives cirlce hexagon shape
+
+    /* Creates the hexagon following the cursor with the 64 amplitudes*/
     ofNoFill();
-    int bands = amplitudes.size();
-    for (int i = 0; i<bands; i++){
-        // ofDrawCircle(ofGetMouseX(), ofGetMouseY(), amplitudes[0]/(i +1));
-        ofDrawSphere(ofGetMouseX(),ofGetMouseY(),amplitudes[0]/(i +1));
+    for (int i = 0; i < 64; i++){
+        ofDrawSphere(ofGetMouseX(),ofGetMouseY(),amplitudes[i]);
     }
+
 }
 
 void ofApp::drawMode5(vector<float> amplitudes){
     ofDrawBitmapString("Pink Floyd Edition", 0, 15);
 
-    // VIEJO
-    // ofNoFill();
-    // ofBeginShape();
-    // for (int i = 0; i < ofGetWidth()/2; i+=(ofGetWidth()/128.0)) {
-    //     float x = i;
-    //     //float noise = ofNoise(i/100.0);
-    //     float y = ofMap(amplitudes[i/(ofGetWidth()/128.0)], 50,ofGetWidth()/2, 50, 100);
-    //     ofVertex(x,y);
-    // }
-    // ofEndShape();
-
-    // ofNoFill();
-    // ofBeginShape();
-    // for (int i = 0; i < 500; i++){
-    //     float x = i;
-    //     float noise = ofNoise(i/100.0);
-    //     float y = ofMap(amplitudes[i], 0,1, (ofGetWidth()/2), (ofGetWidth()/2));
-    //     ofVertex(x,y);
-    // }
-    // ofEndShape();
-
-    // Drawing I/O waves
-    // TODO: JUNTAR WAVES CON TRIANGULO Y SCALE
-    vector<int> r = {255,128,0,0,255,255,255};
-    vector<int> g = {255,0,0,128,255,165,0};
-    vector<int> b = {255,128,255,0,0,0,0};
-    double translateAllLeftX = -75;
-    vector<double> translateX = {-100, (ofGetWindowWidth()/1.4) + translateAllLeftX, (ofGetWindowWidth()/1.44) + translateAllLeftX, (ofGetWindowWidth()/1.47) + translateAllLeftX, (ofGetWindowWidth()/1.51) + translateAllLeftX, (ofGetWindowWidth()/1.55) + translateAllLeftX, (ofGetWindowWidth()/1.59) + translateAllLeftX};
-    vector<double> translateY = {-100, ofGetWindowHeight()/3.0, ofGetWindowHeight()/3.2, ofGetWindowHeight()/3.4, ofGetWindowHeight()/3.65, ofGetWindowHeight()/3.95, ofGetWindowHeight()/4.3};
-    vector<int> side = {1, 1, 1, 1, 1, 1, 1};
-    vector<double> amplitudeChange = {1.0, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25};
-    for (int i = 0; i < side.size(); i++) {
-        ofPushMatrix();
-        ofSetColor(r[i],g[i],b[i]);
-        ofTranslate(translateX[i],(ofGetWindowHeight()/4) + translateY[i]);
-        ofRotateDeg(31 * side[i]);
-        ofNoFill();
-        int spacing = 50;
-        ofBeginShape();
-        for(int x=0; x < (ofGetWidth()/2) + 175; x += spacing) {
-            ofCurveVertex(x, amplitudeChange[i] * amplitudes[0] * 0.3f * sin(x*0.01f + ofGetFrameNum() * 0.02f));
-        }
-        ofEndShape(false);
-        ofPopMatrix();
-    }
-
-    // VIEJO
-    // ofPushMatrix();
-    // ofTranslate(ofGetWindowWidth()/(ofGetWindowWidth()-5), ofGetWindowHeight()); //codigo que maybe nos ayude for bonus
-    // ofSetColor(ofRandom(255), ofRandom(255), ofRandom(255));
-    // int bands = amplitudes.size();
-    // for (int i=0.00; i< bands; i++) {
-    //     ofPolyline polyline;
-    //     for (int j = 0.00; j < ofGetWidth(); j+=ofGetWidth()/128.00) {
-    //      //   ofSetColor((bands - i)*32 %256,18,144);
-    //         polyline.addVertex(j, amplitudes[j/(ofGetWidth()/128.00)]);
-    //     }
-    //     polyline.draw();
-    //  }
-    //  ofPopMatrix();
- 
-    // ofRectangle rect1(0,ofGetWindowHeight()/1.50, ofGetWindowWidth()/2,10) ; //white rectangle
-    // ofRectangle rect2(ofGetWindowWidth()/1.05, ofGetWindowHeight()/3.00,ofGetWindowWidth()/2,15) ; //purple rectangle
-    // ofRectangle rect3(ofGetWindowWidth()/1.07, ofGetWindowHeight()/3.20,ofGetWindowWidth()/2,15) ; //blue rectangle
-    // ofRectangle rect4(ofGetWindowWidth()/1.09, ofGetWindowHeight()/3.40,ofGetWindowWidth()/2,15) ; //green rectangle
-
-    // ofRectangle rect5(ofGetWindowWidth()/1.11, ofGetWindowHeight()/3.65,ofGetWindowWidth()/2,15) ; //yellow rectangle
-    // ofRectangle rect6(ofGetWindowWidth()/1.13, ofGetWindowHeight()/3.95,ofGetWindowWidth()/2,15) ; //orange rectangle
-    // ofRectangle rect7(ofGetWindowWidth()/1.15, ofGetWindowHeight()/4.30,ofGetWindowWidth()/2,15) ; //red rectangle
-    // vector<ofRectangle> myRects = {rect1, rect2,rect3,rect4,rect5,rect6, rect7};
-
-    // vector<int> r = {255,128,0,0,255,255,255};
-    // vector<int> g = {255,0,0,128,255,165,0};
-    // vector<int> b = {255,128,255,0,0,0,0};
-
+    /* Creacion de los triangulos multicolor rotando en el background */
     ofPushMatrix();
     ofTranslate(ofGetWindowWidth() / 2, ofGetWindowHeight() / 1.80);
     ofNoFill();
@@ -281,44 +224,50 @@ void ofApp::drawMode5(vector<float> amplitudes){
     }
     ofPopMatrix();
     
-    // int i = 1;
-    // ofFill();
-    // do {
-    //     ofSetColor(r[i],g[i],b[i]);
-    //     ofPushMatrix();
-    //     ofRotateDeg(15);
-    //     ofDrawRectangle(myRects[i]);
-    //     ofPopMatrix();
-    //     i++;
-    // }
-    // while ( i < myRects.size());
+    ofSetLineWidth(10);
 
-    // ofSetColor(r[0],g[0],b[0]);
-    // ofPushMatrix();
-    // ofRotateDeg(335);
-    // ofDrawRectangle(myRects[0]);
-    // ofPopMatrix();
+    /* Vectores para los valores de RGB */
+    vector<int> r = {255,128,0,0,255,255,255};
+    vector<int> g = {255,0,0,128,255,165,0};
+    vector<int> b = {255,128,255,0,0,0,0};
 
+    /* Vectores de las coordenadas de los waves */
+    double translateAllLeftX = -85;
+    double translateAllUpY = 0;
+    vector<double> translateX = {-100, (ofGetWindowWidth()/1.4)+ translateAllLeftX, (ofGetWindowWidth()/1.44)+ translateAllLeftX, (ofGetWindowWidth()/1.47)+ translateAllLeftX, (ofGetWindowWidth()/1.51)+ translateAllLeftX, (ofGetWindowWidth()/1.55)+ translateAllLeftX, (ofGetWindowWidth()/1.59)+ translateAllLeftX};
+    vector<double> translateY = {-100, (ofGetWindowHeight()/3.0)+translateAllUpY, (ofGetWindowHeight()/3.2)+translateAllUpY, (ofGetWindowHeight()/3.4)+translateAllUpY, (ofGetWindowHeight()/3.65)+translateAllUpY, (ofGetWindowHeight()/3.95)+translateAllUpY, (ofGetWindowHeight()/4.3)+translateAllUpY};
+  //  vector<int> side = {1, 1, 1, 1, 1, 1, 1};
+   // vector<double> amplitudeChange = {1.0, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25};
+
+    /* For-Loop para dibujar los curves/waves con su translation, rotation y rgb */
+    for (int i = 0; i < 7; i++) {
+        ofPushMatrix();
+        ofSetColor(r[i],g[i],b[i]);
+        ofTranslate(translateX[i],(translateY[i] + ofGetWindowHeight()/4)); //+ translateAllLeftX
+        ofRotateDeg(31); // * side[i]
+        int spacing = 50;
+        ofBeginShape();
+        for(int x=0; x < (ofGetWidth()/2) + 175; x += spacing) {
+            ofCurveVertex(x, amplitudes[0] * 0.3f * sin(x*0.01f + ofGetFrameNum() * 0.02f)); //amplitudeChange[i] *
+        }
+        ofEndShape(false);
+        ofPopMatrix();
+    }
+
+ /* Coordenadas/Info para la creacion del triangulo del medio */
     ofSetColor(256);
     ofNoFill();
     ofSetLineWidth(10);
     ofPoint p1;
-    p1.x = (ofGetWindowWidth()/2.00); // changeInWidth * 
-    p1.y = (ofGetWindowHeight()/3.00); // changeInHeight * 
+    p1.x = (windowWidth/2.00)*windowScale; // multiplied by windowScale so triangle sides resize accordingly to the changes in screen 
+    p1.y = (windowHeight/3.00)*windowScale;
     ofPoint p2;
-    p2.x = (ofGetWindowWidth()/3.00);
-    p2.y = (ofGetWindowHeight()/1.50);
+    p2.x = (windowWidth/3.00)*windowScale;
+    p2.y = (windowHeight/1.50)*windowScale;
     ofPoint p3;
-    p3.x = (ofGetWindowWidth()/1.50);
-    p3.y = (ofGetWindowHeight()/1.50);
-    // p1.scale(changeInWidth, changeInHeight, 1);
-    // p2.scale(changeInWidth, changeInHeight);
-    // p3.scale(changeInWidth, changeInHeight);
-
-
-    // TODO: SCALING
+    p3.x = (windowWidth/1.50)*windowScale;
+    p3.y = (windowHeight/1.50)*windowScale;
     ofDrawTriangle(p1,p2,p3);
-    // ofScale((changeInWidth / changeInHeight));
 }
 
 void ofApp::setMode(int key) {
@@ -370,7 +319,7 @@ void ofApp::setMode(int key) {
 void ofApp::setMusic(int key) {
     switch(key) {
         case 'z':
-            if(mode == '5'){
+            if(mode == '5'){ //only in mode 5, songs change to pink floyd
                 sound.load("great-gig.wav");
                 sound.play();
                 break;
@@ -518,9 +467,31 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-    changeInHeight = (ofGetHeight() - windowHeight) / windowHeight;
-    changeInWidth = (ofGetWidth() - windowWidth) / windowWidth;
-    //aspectRatio = 
+
+/* Ajusts screen height and width accordingly */
+    if (!scaleDirFixed) {
+        int diffW = abs(widthScaled - w);
+        int diffH = abs(heightScaled - h);
+        if (diffW > diffH)
+            scaleDir = SCALE_DIR_HORIZONTAL;
+        else
+            scaleDir = SCALE_DIR_VERTICAL;
+            scaleDirFixed = true;
+    }
+    
+    if (scaleDir == SCALE_DIR_HORIZONTAL) {
+        ratio = float(windowHeight) / float(windowWidth);
+        h = w * ratio;
+        windowScale = float(w) / float(windowWidth);
+    }
+    else if (scaleDir == SCALE_DIR_VERTICAL) {
+        ratio = float(windowWidth) / float(windowHeight);
+        w = h * ratio;
+        windowScale = float(h) / float(windowHeight);
+    }
+    widthScaled = windowWidth * windowScale;
+    heightScaled = windowHeight * windowScale;
+    ofSetWindowShape(widthScaled, heightScaled);
 }
 
 //--------------------------------------------------------------
