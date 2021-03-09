@@ -14,7 +14,7 @@ class ofApp : public ofBaseApp{
 		void drawMode2(vector<float> amplitudes);
 		void drawMode3(vector<float> amplitudes);
 		void drawMode4(vector<float> amplitudes);
-		void drawMode5(vector<float> amplitudes); //mode 5 added Bonus (Pink Floyd)
+		void drawMode5(vector<float> amplitudes); // Mode 5 added Bonus (Pink Floyd)
 
 		void setMode(int key);
 		void setMusic(int key);
@@ -55,16 +55,16 @@ class ofApp : public ofBaseApp{
 		
 		char mode = '1';
 
-	/* Initialize variables for resizing screen window */
+		/* Initialize variables for resizing screen window */
 		enum ScaleDir {
 			SCALE_DIR_HORIZONTAL,
 			SCALE_DIR_VERTICAL,
 		};
 		ScaleDir scaleDir;
 
-		int windowWidth, windowHeight; //original window dimensions
-		float widthScaled, heightScaled; //scaled window dimensions
+		int windowWidth, windowHeight; // Original window dimensions
+		float widthScaled, heightScaled; // Scaled window dimensions
 		float windowScale; //scale amount
-		bool scaleDirFixed; //is direction fixed?
-		float ratio; //ratio used in window resizing
+		bool scaleDirFixed;
+		float ratio; // Ratio used in window resizing
 };
