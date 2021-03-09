@@ -235,23 +235,26 @@ void ofApp::drawMode5(vector<float> amplitudes){
     vector<int> b = {255,128,255,0,0,0,0};
 
     /* Vectores de las coordenadas de los waves */
-    double translateAllLeftX = -85;
-    double translateAllUpY = 0;
-    vector<double> translateX = {-100, (ofGetWindowWidth()/1.4)+ translateAllLeftX, (ofGetWindowWidth()/1.44)+ translateAllLeftX, (ofGetWindowWidth()/1.47)+ translateAllLeftX, (ofGetWindowWidth()/1.51)+ translateAllLeftX, (ofGetWindowWidth()/1.55)+ translateAllLeftX, (ofGetWindowWidth()/1.59)+ translateAllLeftX};
-    vector<double> translateY = {-100, (ofGetWindowHeight()/3.0)+translateAllUpY, (ofGetWindowHeight()/3.2)+translateAllUpY, (ofGetWindowHeight()/3.4)+translateAllUpY, (ofGetWindowHeight()/3.65)+translateAllUpY, (ofGetWindowHeight()/3.95)+translateAllUpY, (ofGetWindowHeight()/4.3)+translateAllUpY};
-  //  vector<int> side = {1, 1, 1, 1, 1, 1, 1};
+    double translateAllLeftX = -0.10; 
+    double translateAllDownY = -0.20;
+    vector<double> translateX = {ofGetWidth()/2.10, ofGetWindowWidth()/(1.85+translateAllLeftX), ofGetWindowWidth()/(1.88+translateAllLeftX), ofGetWindowWidth()/(1.90+translateAllLeftX), ofGetWindowWidth()/(1.93+translateAllLeftX), ofGetWindowWidth()/(1.94+translateAllLeftX), ofGetWindowWidth()/(1.98+translateAllLeftX)};
+    vector<double> translateY = {ofGetHeight()/2.00, ofGetWindowHeight()/(1.85+translateAllDownY), ofGetWindowHeight()/(1.90+translateAllDownY), ofGetWindowHeight()/(1.95+translateAllDownY), ofGetWindowHeight()/(2.00+translateAllDownY), ofGetWindowHeight()/(2.05+translateAllDownY), ofGetWindowHeight()/(2.10+translateAllDownY)};
+    vector<float> side = {6.80, -1, -1, -1, -1, -1, -1};
    // vector<double> amplitudeChange = {1.0, 0.25, 0.25, 0.25, 0.25, 0.25, 0.25};
 
+    ofSetLineWidth(10);
     /* For-Loop para dibujar los curves/waves con su translation, rotation y rgb */
     for (int i = 0; i < 7; i++) {
         ofPushMatrix();
         ofSetColor(r[i],g[i],b[i]);
-        ofTranslate(translateX[i],(translateY[i] + ofGetWindowHeight()/4)); //+ translateAllLeftX
-        ofRotateDeg(31); // * side[i]
+        ofTranslate(translateX[i],translateY[i]); //+ ofGetWindowHeight()/4)
+        ofRotateDeg(31* side[i]); // * side[i]
+      //  ofScaleMode(ofAspectRatioMode);
+        ofScale(windowScale);
         int spacing = 50;
         ofBeginShape();
-        for(int x=0; x < (ofGetWidth()/2) + 175; x += spacing) {
-            ofCurveVertex(x, amplitudes[0] * 0.3f * sin(x*0.01f + ofGetFrameNum() * 0.02f)); //amplitudeChange[i] *
+        for(int x=0; x < (ofGetWidth()/2 + 1000); x += spacing) {
+            ofCurveVertex(x, windowScale * (amplitudes[0] * 0.3f * sin(x*0.01f + ofGetFrameNum() * 0.02f)));
         }
         ofEndShape(false);
         ofPopMatrix();
@@ -262,14 +265,15 @@ void ofApp::drawMode5(vector<float> amplitudes){
     ofNoFill();
     ofSetLineWidth(10);
     ofPoint p1;
-    p1.x = (windowWidth/2.00)*windowScale; // multiplied by windowScale so triangle sides resize accordingly to the changes in screen 
-    p1.y = (windowHeight/3.00)*windowScale;
+    p1.x = (windowWidth/2.00); // multiplied by windowScale so triangle sides resize accordingly to the changes in screen 
+    p1.y = (windowHeight/3.00);
     ofPoint p2;
-    p2.x = (windowWidth/3.00)*windowScale;
-    p2.y = (windowHeight/1.50)*windowScale;
+    p2.x = (windowWidth/3.00);
+    p2.y = (windowHeight/1.50);
     ofPoint p3;
-    p3.x = (windowWidth/1.50)*windowScale;
-    p3.y = (windowHeight/1.50)*windowScale;
+    p3.x = (windowWidth/1.50);
+    p3.y = (windowHeight/1.50);
+    ofScale(windowScale);
     ofDrawTriangle(p1,p2,p3);
 }
 
