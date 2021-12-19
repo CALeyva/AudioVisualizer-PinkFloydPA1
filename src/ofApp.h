@@ -14,7 +14,7 @@ class ofApp : public ofBaseApp{
 		void drawMode2(vector<float> amplitudes);
 		void drawMode3(vector<float> amplitudes);
 		void drawMode4(vector<float> amplitudes);
-		void drawMode5(vector<float> amplitudes);
+		void drawMode5(vector<float> amplitudes); // Mode 5 added Bonus (Pink Floyd)
 
 		void setMode(int key);
 		void setMusic(int key);
@@ -37,6 +37,10 @@ class ofApp : public ofBaseApp{
 		ofSoundPlayer sound;
 		AudioVisualizer visualizer;
 		
+		vector<string> playlist = {"rock-song.wav", "beat.wav", "geesebeat.wav", "pigeon-coo.wav", "great-gig.wav", "brain-damage.wav", "eclipse.wav", "money.wav", "ComfortablyNumb.wav", "Time.wav"};
+		vector<string> songTitles = {"Rock", "Beat", "Geesebeat", "Pidgeon Trap", "Great Gig - Pink Floyd", "Brain Damage - Pink Floyd", "Eclipse - Pink Floyd", "Money - Pink Floyd", "Comfortably Numb - Pink Floyd", "Time - Pink Floyd"};
+		int songPlayingID;
+
 		bool playing = false;
 		bool pauseDraw = false;
 
@@ -48,14 +52,19 @@ class ofApp : public ofBaseApp{
 		int playKey;
 		bool keyInFrame;
 		std::map<long, int> recordings;
-
-		int windowHeight;
-		int windowWidth;
-		double changeInHeight = 1.0;
-		double changeInWidth = 1.0;
-		//double aspectRatio;
 		
 		char mode = '1';
 
-		ofEasyCam cam;
+		/* Initialize variables for resizing screen window */
+		enum ScaleDir {
+			SCALE_DIR_HORIZONTAL,
+			SCALE_DIR_VERTICAL,
+		};
+		ScaleDir scaleDir;
+
+		int windowWidth, windowHeight; // Original window dimensions
+		float widthScaled, heightScaled; // Scaled window dimensions
+		float windowScale; //scale amount
+		bool scaleDirFixed;
+		float ratio; // Ratio used in window resizing
 };
